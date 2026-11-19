@@ -1,0 +1,62 @@
+// Practical 09: Generic Stack using templates
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stdexcept>
+using namespace std;
+
+// T is a placeholder for ANY data type
+template <typename T>
+class Stack {
+private:
+    vector<T> items;      // STL container used internally
+public:
+    void push(const T& value) {
+        items.push_back(value);
+    }
+
+    void pop() {
+        if (items.empty())
+            throw runtime_error("Stack is empty, cannot pop!");
+        items.pop_back();
+    }
+
+    T& top() {
+        if (items.empty())
+            throw runtime_error("Stack is empty, no top element!");
+        return items.back();
+    }
+
+    bool isEmpty() const { return items.empty(); }
+    int size() const { return items.size(); }
+};
+
+// One function to test any type of stack
+template <typename T>
+void testStack(const string& label, T a, T b, T c) {
+    cout << "\n--- " << label << " stack ---\n";
+    Stack<T> s;
+    s.push(a); s.push(b); s.push(c);
+    cout << "Pushed 3 items. Size = " << s.size() << endl;
+    cout << "Top = " << s.top() << endl;
+    s.pop();
+    cout << "After pop, top = " << s.top() << endl;
+    s.pop(); s.pop();
+    cout << "After popping all, isEmpty = " << (s.isEmpty() ? "true" : "false") << endl;
+}
+
+int main() {
+    testStack<int>("int", 10, 20, 30);
+    testStack<float>("float", 1.5f, 2.5f, 3.5f);
+    testStack<string>("string", "apple", "banana", "cherry");
+
+    // Empty-stack test
+    cout << "\n--- Empty stack test ---\n";
+    Stack<int> empty;
+    try {
+        empty.pop();
+    } catch (const exception& e) {
+        cout << "Error caught: " << e.what() << endl;
+    }
+    return 0;
+}
